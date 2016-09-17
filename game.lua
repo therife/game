@@ -1,106 +1,143 @@
 game = {}
 
-b = _button:create(100, 100, 80, 60, "step", menu.font, 15, "center")
+b = _button:create(500, 500, 80, 60, "step", menu.font, 15, "center")
+b2 = _button:create(500, 600, 80, 60, "way", menu.font, 15, "center")
 
-p = { {-1, -1, -1, -1, -1, -1, -1},
-      {-1,  5,  0,  0,  0,  0, -1},
-      {-1,  0,  0,  1,  0,  0, -1},
-      {-1,  0,  1,  2,  0,  0, -1},
-      {-1,  0,  0,  0,  0,  0, -1},
-      {-1, -1, -1, -1, -1, -1, -1}}
-pm = 6
-pn = 5
-x, y = 2, 2
-
-r = { {0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0}}
-rm = pm
-rn = pn
-
+r = 50
+m = 15
+n = 7
 ni = 0
-nk = 5
+min = 200
 
-for i = 2, pn do
-  for j = 2, pm do
-    if p[i][j] == 1 then r[i][j] = 255
-    elseif p[i][j] == 0 then r[i][j] = 254
-    elseif p[i][j] == 2 then r[i][j] = 0
-    elseif p[i][j] == 5 then r[i][j] = 253 end
+map = { {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0},
+        {0, 0, 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 0, 0},
+        {0, 0, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0},
+        {0, 0, 0, 1, 0, 1, 0, 4, 0, 2, 0, 1, 0, 1, 0, 1, 0, 0, 0},
+        {0, 0, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 1, 0, 0},
+        {0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
+
+mar = {}
+
+way = {{8, 6}}
+wayn = 2
+
+for i = 1, n + 4 do
+  mar[i] = {}
+  for k = 1, m + 4 do
+    if map[i][k] == 1 then
+      mar[i][k] = 254
+    elseif map[i][k] == 2 then
+      mar[i][k] = 255
+    elseif map[i][k] == 3 then
+      mar[i][k] = 0
+    elseif map[i][k] == 4 then
+      mar[i][k] = 253
+    end
   end
 end
-for ni = 0, nk do
-  for i = 2, pn do
-    for j = 2, pm do
-      if r[i][j] == ni then
-        if r[i - 1][j] == 253 then
-          --p10
-        elseif r[i - 1][j] == 254 then
-          r[i - 1][j] = ni + 1
-        end
 
-        if r[i + 1][j] == 253 then
-          --p10
-        elseif r[i + 1][j] == 254 then
-          r[i + 1][j] = ni + 1
+function step()
+  for i = 3, n + 2 do
+    for k = 3, m + 2 do
+      if mar[i][k] == ni then
+        if mar[i][k - 2] == 254 then
+          mar[i][k - 2] = ni + 1
         end
-
-        if r[i][j - 1] == 253 then
-          --p10
-        elseif r[i][j - 1] == 254 then
-          r[i][j - 1] = ni + 1
+        if mar[i - 1][k - 1] == 254 then
+          mar[i - 1][k - 1] = ni + 1
         end
-
-        if r[i][j + 1] == 253 then
-          --p10
-        elseif r[i][j + 1] == 254 then
-          r[i][j + 1] = ni + 1
+        if mar[i + 1][k - 1] == 254 then
+          mar[i + 1][k - 1] = ni + 1
+        end
+        if mar[i][k + 2] == 254 then
+          mar[i][k + 2] = ni + 1
+        end
+        if mar[i + 1][k + 1] == 254 then
+          mar[i + 1][k + 1] = ni + 1
+        end
+        if mar[i - 1][k + 1] == 254 then
+          mar[i - 1][k + 1] = ni + 1
         end
       end
     end
   end
+  ni = ni + 1
 end
-for i = 1, 1 do
-  min = 999
-  if min > r[x - 1][y] and r[x - 1][y] ~= 0 then
-    min = r[x - 1][y]
-    minx = x - 1
-    miny = y
-  elseif min > r[x + 1][y] and r[x + 1][y] ~= 0 then
-    min = r[x + 1][y]
-    minx = x + 1
-    miny = y
-  elseif min > r[x][y - 1] and r[x][y - 1] ~= 0 then
-    min = r[x][y - 1]
-    minx = x
-    miny = y - 1
-  elseif min > r[x][y + 1] and r[x][y + 1] ~= 0 then
-    min = r[x][y + 1]
-    minx = x
-    miny = y + 1
+
+function stepway()
+  if mar[way[wayn][1]][way[wayn][2] - 2] < min then
+    min = mar[way[wayn][1]][way[wayn][2] - 2]
+    way[wayn] = {way[wayn][1], way[wayn][2] - 2}
   end
-  x = minx
-  y = miny
+  if mar[way[wayn][1] - 1][way[wayn][2] - 1] < min then
+    min = mar[way[wayn][1] - 1][way[wayn][2] - 1]
+    way[wayn] = {way[wayn][1] - 1, way[wayn][2] - 1}
+  end
+  if mar[way[wayn][1] + 1][way[wayn][2] - 1] < min then
+    min = mar[way[wayn][1] + 1][way[wayn][2] - 1]
+    way[wayn] = {way[wayn][1] + 1, way[wayn][2] - 1}
+  end
+  if mar[way[wayn][1]][way[wayn][2] + 2] < min then
+    min = mar[way[wayn][1]][way[wayn][2] + 2]
+    way[wayn] = {way[wayn][1], way[wayn][2] + 2}
+  end
+  if mar[way[wayn][1] + 1][way[wayn][2] + 1] < min then
+    min = mar[way[wayn][1] + 1][way[wayn][2] + 1]
+    way[wayn] = {way[wayn][1] + 1, way[wayn][2] + 1}
+  end
+  if mar[way[wayn][1] - 1][way[wayn][2] + 1] < min then
+    min = mar[way[wayn][1] - 1][way[wayn][2] + 1]
+    way[wayn] = {way[wayn][1] - 1, way[wayn][2] + 1}
+  end
+  wayn = wayn + 1
 end
 
 function game.update()
-
+  if b:click() then
+    step()
+  end
+  if b2:click() then
+    stepway()
+  end
 end
+
 function game.draw()
-  for i = 2, pm do
-    for k = 2, pn do
-      if p[k][i] == 0 then love.graphics.setColor(150, 150, 150)
-      elseif p[k][i] == 1 then love.graphics.setColor(250, 250, 250)
-      elseif p[k][i] == 2 then love.graphics.setColor(100, 170, 100)
-      elseif p[k][i] == 5 then love.graphics.setColor(70, 150, 70) end
-      love.graphics.rectangle("line", i * 50 + 400, k * 50 + 200, 45, 45)
-      love.graphics.print(r[k][i], i * 50 + 400, k * 50 + 200)
+  for i = 3, m + 2 do
+    for k = 3, n + 2 do
+      if map[k][i] == 1 then
+        love.graphics.setColor(150, 150, 150)
+        love.graphics.circle("line", i * r / 2, k * r, r / 2)
+        --love.graphics.print(tostring(i..":"..k), i * r / 2 - 10, k * r - 10)
+      end
+      if map[k][i] == 2 then
+        love.graphics.setColor(200, 100, 100)
+        love.graphics.circle("line", i * r / 2, k * r, r / 2)
+        --love.graphics.print(tostring(i..":"..k), i * r / 2 - 10, k * r - 10)
+      end
+      if map[k][i] == 3 then
+        love.graphics.setColor(100, 200, 100)
+        love.graphics.circle("line", i * r / 2, k * r, r / 2)
+        --love.graphics.print(tostring(i..":"..k), i * r / 2 - 10, k * r - 10)
+      end
+      if map[k][i] == 4 then
+        love.graphics.setColor(50, 150, 50)
+        love.graphics.circle("line", i * r / 2, k * r, r / 2)
+        --love.graphics.print(tostring(i..":"..k), i * r / 2 - 10, k * r - 10)
+      end
+      if mar[k][i] ~= nil then
+        love.graphics.print(tostring(mar[k][i]), i * r / 2 - 10, k * r - 10)
+      end
     end
   end
+  for i, k in pairs(way) do
+    love.graphics.setColor(100, 100, 150)
+    love.graphics.circle("line", k[1] * r / 2, k[2] * r, r / 4)
+  end
   b:draw()
-  love.graphics.print(tostring(min.." - "..x..":"..y), 10, 10)
-  love.graphics.print(tostring(min.." - "..minx..":"..miny), 10, 30)
+  b2:draw()
 end
